@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    android:weightSum="100"
+    tools:context=".musicplayer">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="60"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/song_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:gravity="center_horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:padding="10dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="Name of Song"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="40">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <SeekBar
+                android:id="@+id/seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp" />
+
+
+
+        <Button
+            android:id="@+id/play"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:background="@drawable/pause"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+
+            />
+            <Button
+                android:layout_width="68dp"
+                android:layout_height="68dp"
+                android:id="@+id/next"
+                android:layout_toRightOf="@+id/play"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/next"/>
+
+            <Button
+                android:id="@+id/previous"
+                android:layout_width="68dp"
+                android:layout_height="68dp"
+                android:layout_marginTop="50dp"
+                android:layout_toLeftOf="@+id/play"
+                android:background="@drawable/previous" />
+
+
+
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
