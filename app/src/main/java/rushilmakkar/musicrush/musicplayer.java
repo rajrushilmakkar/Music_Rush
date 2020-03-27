@@ -18,7 +18,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class musicplayer extends AppCompatActivity {
-    Button next,previous,play;
+    Button next, previous, play;
     TextView song_name;
     String sname;
     String songname;
@@ -33,62 +33,70 @@ public class musicplayer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_musicplayer);
-        next=findViewById(R.id.next);
-        previous=findViewById(R.id.previous);
-        play=findViewById(R.id.play);
-        song_name=findViewById(R.id.song_name);
-        seekBar=findViewById(R.id.seekbar);
+        next = findViewById(R.id.next);
+        previous = findViewById(R.id.previous);
+        play = findViewById(R.id.play);
+        song_name = findViewById(R.id.song_name);
+        seekBar = findViewById(R.id.seekbar);
         getSupportActionBar().setTitle("Enjoy the music!");
         //getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        runseekBar=new Thread(){
+        runseekBar = new Thread() {
             @Override
             public void run() {
-                int duration=player.getDuration();
-                int currentpos=0;
-                while(currentpos<duration){
-                    try{
-                        sleep(800 );
-                        currentpos=player.getCurrentPosition();
+                int duration = player.getDuration();
+                int currentpos = 0;
+                while (player!=null) {
+                    try {
+                        sleep(1000);
+                        currentpos = player.getCurrentPosition();
                         seekBar.setProgress(currentpos);
 
-                    }
-                    catch (InterruptedException e){
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
 
             }
         };
-        if(player!=null){
+        if (player != null) {
             player.stop();
             player.release();
         }
-        Intent i=getIntent();
-        Bundle bundle=i.getExtras();
-        songs=(ArrayList)bundle.getParcelableArrayList("songs");
-        songname=songs.get(position).getName().toString();
-        sname=i.getStringExtra("songname");
+        Intent i = getIntent();
+        Bundle bundle = i.getExtras();
+        songs = (ArrayList) bundle.getParcelableArrayList("songs");
+        songname = songs.get(position).getName().toString();
+        sname = i.getStringExtra("songname");
         song_name.setText(sname);
         song_name.setSelected(true);
 
-        position=bundle.getInt("pos",0);
-        Uri u=Uri.parse(songs.get(position).toString());
-        player=MediaPlayer.create(getApplicationContext(),u);
+        position = bundle.getInt("pos", 0);
+        Uri u = Uri.parse(songs.get(position).toString());
+        player = MediaPlayer.create(getApplicationContext(), u);
         player.start();
         seekBar.setMax(player.getDuration());
         runseekBar.start();
+
         player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                onBackPressed();
-                //next.callOnClick();
-                //runseekBar.start();
+                if (player != null && player.isPlaying()) {
+                    //player.reset();
+                }
+                player.stop();
+                player.release();
+                position = ((position + 1) % songs.size());
+                Uri u = Uri.parse(songs.get(position).toString());
+                player = MediaPlayer.create(getApplicationContext(), u);
+                songname = songs.get(position).getName();
+                song_name.setText(songname);
+                player.start();
+                play.setBackgroundResource(R.drawable.pause);
             }
         });
-
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -112,11 +120,10 @@ public class musicplayer extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 seekBar.setMax(player.getDuration());
-                if(player.isPlaying()){
+                if (player.isPlaying()) {
                     play.setBackgroundResource(R.drawable.play);
                     player.pause();
-                }
-                else{
+                } else {
                     play.setBackgroundResource(R.drawable.pause);
                     player.start();
                 }
@@ -127,27 +134,36 @@ public class musicplayer extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (player != null && player.isPlaying()) {
+                    //player.reset();
+                }
                 player.stop();
                 player.release();
-                position=((position+1)%songs.size());
-                Uri u=Uri.parse(songs.get(position).toString());
-                player=MediaPlayer.create(getApplicationContext(),u);
-                songname=songs.get(position).getName();
+                position = ((position + 1) % songs.size());
+                Uri u = Uri.parse(songs.get(position).toString());
+                player = MediaPlayer.create(getApplicationContext(), u);
+                songname = songs.get(position).getName();
                 song_name.setText(songname);
                 player.start();
+                play.setBackgroundResource(R.drawable.pause);
             }
         });
         previous.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (player != null && player.isPlaying()) {
+                    //player.reset();
+                }
                 player.stop();
                 player.release();
-                position=((position-1)<0)?(songs.size()-1):(position-1);
-                Uri u=Uri.parse(songs.get(position).toString());
-                player=MediaPlayer.create(getApplicationContext(),u);
-                songname=songs.get(position).getName();
+                position = ((position - 1) < 0) ? (songs.size() - 1) : (position - 1);
+                Uri u = Uri.parse(songs.get(position).toString());
+                player = MediaPlayer.create(getApplicationContext(), u);
+                songname = songs.get(position).getName();
                 song_name.setText(songname);
                 player.start();
+                play.setBackgroundResource(R.drawable.pause);
 
                 //runseekBar.start();
             }
@@ -157,7 +173,7 @@ public class musicplayer extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
